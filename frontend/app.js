@@ -251,101 +251,6 @@ function terminateCurrentRequest() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// KPI DASHBOARD (Live Strip at the Top)
-// ═══════════════════════════════════════════════════════════════════════════
-
-async function loadMetrics() {
-  try {
-    const res = await fetch(`${API_BASE}/metrics`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-
-    // Pipeline
-    animateValue('kpi-pipeline', formatCurrency(data.pipeline_value));
-    document.getElementById('kpi-pipeline-sub').textContent =
-      `${data.deals_with_values || 0} of ${data.deal_count || 0} deals valued`;
-
-    // Win Rate
-    const winRateStr = (data.win_rate_pct !== null && data.win_rate_pct !== undefined)
-      ? `${data.win_rate_pct}%`
-      : 'N/A';
-    animateValue('kpi-winrate', winRateStr);
-    document.getElementById('kpi-winrate-sub').textContent =
-      (data.total_closed_won || 0) + (data.total_closed_lost || 0) > 0
-        ? `${data.total_closed_won || 0} won · ${data.total_closed_lost || 0} lost`
-        : '0 resolved deals (active pipeline)';
-
-    // Deals
-    animateValue('kpi-deals', (data.deal_count || 0).toLocaleString());
-    const stageCount = data.stage_breakdown ? Object.keys(data.stage_breakdown).length : 0;
-    document.getElementById('kpi-deals-sub').textContent =
-      `Across ${stageCount} pipeline stages`;
-
-    // Revenue
-    animateValue('kpi-revenue', formatCurrency(data.revenue_collected));
-    document.getElementById('kpi-revenue-sub').textContent =
-      `₹${formatShort(data.amount_receivable)} receivable`;
-
-    // Mark cards loaded
-    document.querySelectorAll('.kpi-card').forEach(c => c.classList.add('loaded'));
-
-  } catch (err) {
-    console.warn('Metrics load error:', err);
-    document.querySelectorAll('.kpi-sub').forEach(el => {
-      el.textContent = 'Live data available in chat';
-      el.style.color = 'var(--text-muted)';
-    });
-    document.querySelectorAll('.kpi-card').forEach(c => c.classList.add('loaded'));
-  }
-}
-
-// Make top KPI cards interactive
-document.getElementById('kpi-card-pipeline')?.addEventListener('click', () => {
-  submitQuestion("What's the total pipeline value?");
-});
-document.getElementById('kpi-card-winrate')?.addEventListener('click', () => {
-  submitQuestion("What's our win rate?");
-});
-document.getElementById('kpi-card-deals')?.addEventListener('click', () => {
-  submitQuestion("Show me deal count by stage.");
-});
-document.getElementById('kpi-card-revenue')?.addEventListener('click', () => {
-  submitQuestion("Show me revenue collected, billed, and receivable from work orders.");
-});
-
-function formatCurrency(value) {
-  if (!value || value === 0) return '₹0';
-  if (value >= 1e9)  return '₹' + (value / 1e9).toFixed(2) + 'B';
-  if (value >= 1e7)  return '₹' + (value / 1e7).toFixed(1) + 'Cr';
-  if (value >= 1e5)  return '₹' + (value / 1e5).toFixed(1) + 'L';
-  if (value >= 1e3)  return '₹' + (value / 1e3).toFixed(1) + 'K';
-  return '₹' + value.toLocaleString();
-}
-
-function formatShort(value) {
-  if (!value || value === 0) return '0';
-  if (value >= 1e9)  return (value / 1e9).toFixed(1) + 'B';
-  if (value >= 1e7)  return (value / 1e7).toFixed(1) + 'Cr';
-  if (value >= 1e5)  return (value / 1e5).toFixed(1) + 'L';
-  if (value >= 1e3)  return (value / 1e3).toFixed(0) + 'K';
-  return value.toLocaleString();
-}
-
-function animateValue(elementId, finalText) {
-  const el = document.getElementById(elementId);
-  if (!el) return;
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(6px)';
-  setTimeout(() => {
-    el.textContent = finalText;
-    el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-    el.style.opacity = '1';
-    el.style.transform = 'translateY(0)';
-  }, 80);
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
 // CORE CHAT FLOW
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -715,5 +620,4 @@ if (threads.length === 0) {
   selectThread(threads[threads.length - 1].id);
 }
 
-loadMetrics();
 userInput.focus();
