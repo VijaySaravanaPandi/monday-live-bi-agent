@@ -21,9 +21,9 @@
   <!-- ── App Shell ────────────────────────────────────────────── -->
   <div class="app-shell">
 
-    <!-- ── Sidebar ────────────────────────────────────────────── -->
+    <!-- ── Sidebar (ChatGPT-style with History) ───────────────── -->
     <aside class="sidebar" id="sidebar">
-      <!-- Brand -->
+      <!-- Brand & New Chat -->
       <div class="sidebar-header">
         <div class="brand-logo" aria-hidden="true">
           <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -48,59 +48,30 @@
         </button>
       </div>
 
-      <!-- Navigation -->
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <p class="nav-section-label">Quick Insights</p>
-          <button class="nav-btn" id="q-pipeline">
-            <span class="nav-btn-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-            </span>
-            <span class="nav-btn-text">Total Pipeline Value</span>
-          </button>
-          <button class="nav-btn" id="q-winrate">
-            <span class="nav-btn-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
-            </span>
-            <span class="nav-btn-text">Win Rate Analysis</span>
-          </button>
-          <button class="nav-btn" id="q-stages">
-            <span class="nav-btn-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>
-            </span>
-            <span class="nav-btn-text">Deal Stage Breakdown</span>
-          </button>
-          <button class="nav-btn" id="q-mining">
-            <span class="nav-btn-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22L12 2l10 20H2z"/></svg>
-            </span>
-            <span class="nav-btn-text">Mining Sector Deep Dive</span>
-          </button>
-          <button class="nav-btn" id="q-revenue">
-            <span class="nav-btn-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-            </span>
-            <span class="nav-btn-text">Revenue & Billing Status</span>
-          </button>
-          <button class="nav-btn nav-btn-accent" id="q-leadership">
-            <span class="nav-btn-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            </span>
-            <span class="nav-btn-text">Leadership Update</span>
-            <span class="nav-btn-badge">Executive</span>
-          </button>
+      <!-- New Chat Button -->
+      <div class="sidebar-action-wrap">
+        <button class="btn-new-chat" id="btn-new-chat" aria-label="Start new conversation">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Conversation
+        </button>
+      </div>
+
+      <!-- Chat History (ChatGPT style) -->
+      <div class="sidebar-history-container">
+        <div class="history-label">
+          <span>Recent Conversations</span>
+          <button class="history-clear-btn" id="btn-clear-all" title="Clear all history">Clear</button>
         </div>
-      </nav>
+        <div class="history-list" id="history-list" role="navigation" aria-label="Chat History">
+          <!-- Dynamically populated from localStorage -->
+        </div>
+      </div>
 
       <!-- Sidebar Footer -->
       <div class="sidebar-footer">
-        <button class="btn-new-chat" id="btn-clear" aria-label="Start new conversation">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          New Conversation
-        </button>
         <div class="connection-badge" id="connection-badge">
           <span class="conn-dot"></span>
-          <span class="conn-text">Monday.com Connected</span>
+          <span class="conn-text">Monday.com Live Sync</span>
         </div>
       </div>
     </aside>
@@ -115,12 +86,12 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
           </button>
           <div class="page-title">
-            <h1>Business Intelligence</h1>
-            <span class="page-subtitle">Live Monday.com Data · AI-Powered Analysis</span>
+            <h1 id="current-thread-title">Business Intelligence Command Center</h1>
+            <span class="page-subtitle">Live Monday.com Data · Zero-Arithmetic Deterministic Engine</span>
           </div>
         </div>
         <div class="top-bar-right">
-          <div class="live-pulse" id="live-pulse">
+          <div class="live-pulse" id="live-pulse" title="Live connection active">
             <span class="pulse-ring"></span>
             <span class="pulse-core"></span>
           </div>
@@ -132,9 +103,9 @@
         </div>
       </header>
 
-      <!-- KPI Dashboard Cards -->
-      <div class="kpi-strip" id="kpi-strip">
-        <div class="kpi-card" id="kpi-card-pipeline">
+      <!-- ── Top Executive KPI Summary Strip ───────────────────── -->
+      <section class="kpi-strip" id="kpi-strip" aria-label="Executive KPI Overview">
+        <div class="kpi-card" id="kpi-card-pipeline" title="Click to query Total Pipeline Value">
           <div class="kpi-card-inner">
             <div class="kpi-header">
               <div class="kpi-icon-wrap kpi-icon-blue">
@@ -146,12 +117,12 @@
             </div>
             <div class="kpi-value" id="kpi-pipeline">—</div>
             <div class="kpi-label">Total Pipeline Value</div>
-            <div class="kpi-sub" id="kpi-pipeline-sub">Loading from Monday.com…</div>
+            <div class="kpi-sub" id="kpi-pipeline-sub">Loading live data…</div>
           </div>
           <div class="kpi-shimmer"></div>
         </div>
 
-        <div class="kpi-card" id="kpi-card-winrate">
+        <div class="kpi-card" id="kpi-card-winrate" title="Click to query Win Rate Analysis">
           <div class="kpi-card-inner">
             <div class="kpi-header">
               <div class="kpi-icon-wrap kpi-icon-emerald">
@@ -165,7 +136,7 @@
           <div class="kpi-shimmer"></div>
         </div>
 
-        <div class="kpi-card" id="kpi-card-deals">
+        <div class="kpi-card" id="kpi-card-deals" title="Click to query Deal Stage Breakdown">
           <div class="kpi-card-inner">
             <div class="kpi-header">
               <div class="kpi-icon-wrap kpi-icon-violet">
@@ -179,7 +150,7 @@
           <div class="kpi-shimmer"></div>
         </div>
 
-        <div class="kpi-card" id="kpi-card-revenue">
+        <div class="kpi-card" id="kpi-card-revenue" title="Click to query Revenue Summary">
           <div class="kpi-card-inner">
             <div class="kpi-header">
               <div class="kpi-icon-wrap kpi-icon-amber">
@@ -192,14 +163,14 @@
           </div>
           <div class="kpi-shimmer"></div>
         </div>
-      </div>
+      </section>
 
-      <!-- Chat Container -->
+      <!-- ── Chat Area ────────────────────────────────────────── -->
       <div class="chat-container">
         <div class="messages-area" id="messages-area" role="log" aria-label="Conversation" aria-live="polite">
           <!-- Welcome State -->
           <div class="welcome-state" id="welcome-state">
-            <div class="welcome-badge">AI-POWERED BUSINESS INTELLIGENCE</div>
+            <div class="welcome-badge">EXECUTIVE INTELLIGENCE ASSISTANT</div>
             <div class="welcome-icon-wrap">
               <div class="welcome-icon-ring ring-1"></div>
               <div class="welcome-icon-ring ring-2"></div>
@@ -209,54 +180,72 @@
                 </svg>
               </div>
             </div>
-            <h2 class="welcome-title">What would you like to know?</h2>
-            <p class="welcome-sub">Ask any business question — I'll query Monday.com in real-time and give you a data-driven answer with full transparency.</p>
-            <div class="welcome-chips">
-              <button class="chip" data-q="What's the total pipeline value?">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-                Pipeline value
-              </button>
-              <button class="chip" data-q="What's our win rate?">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                Win rate
-              </button>
-              <button class="chip" data-q="How is Mining performing across sales and operations?">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22L12 2l10 20H2z"/></svg>
-                Mining overview
-              </button>
-              <button class="chip" data-q="Give me a leadership update for the board.">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                Leadership briefing
-              </button>
-            </div>
+            <h2 class="welcome-title">Ask anything about Skylark Drones</h2>
+            <p class="welcome-sub">Ask any business intelligence question — queries are computed dynamically against Monday.com with 100% verified math.</p>
           </div>
         </div>
 
-        <!-- Input Bar -->
+        <!-- ── Interactive Prompt Bar & Input ───────────────────── -->
         <div class="input-bar">
+          
+          <!-- 5 Quick Prompt Chips positioned above text box -->
+          <div class="quick-prompts-bar" id="quick-prompts-bar" aria-label="Quick Prompts">
+            <button class="quick-chip" data-q="What's the total pipeline value?">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              Pipeline Value
+            </button>
+            <button class="quick-chip" data-q="What's our win rate?">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+              Win Rate
+            </button>
+            <button class="quick-chip" data-q="Show me deal count by stage.">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>
+              Stage Breakdown
+            </button>
+            <button class="quick-chip" data-q="How is Mining performing across sales and operations?">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22L12 2l10 20H2z"/></svg>
+              Mining Sector
+            </button>
+            <button class="quick-chip" data-q="Show me revenue collected, billed, and receivable from work orders.">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              Revenue & Billing
+            </button>
+            <button class="quick-chip quick-chip-accent" data-q="Give me a leadership update for the board.">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Leadership Update
+            </button>
+          </div>
+
+          <!-- Input Box & Action Buttons -->
           <div class="input-glow"></div>
           <div class="input-row">
             <textarea
               id="user-input"
               class="chat-input"
-              placeholder="Ask about pipeline, sectors, revenue, win rates…"
+              placeholder="Ask a question about deals, pipeline, sectors, revenue..."
               rows="1"
               maxlength="500"
               aria-label="Your question"
             ></textarea>
-            <button class="send-btn" id="send-btn" aria-label="Send message" disabled>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            
+            <!-- Send Button (Switches to Terminator Stop Button during generation) -->
+            <button class="action-btn send-btn" id="action-btn" aria-label="Send message" disabled>
+              <svg class="send-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"/>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"/>
               </svg>
+              <svg class="stop-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                <rect x="5" y="5" width="14" height="14" rx="2"/>
+              </svg>
             </button>
           </div>
+
           <div class="input-footer">
             <span class="footer-tag">Powered by Groq AI</span>
             <span class="footer-sep">·</span>
             <span class="footer-tag">Deterministic BI Engine</span>
             <span class="footer-sep">·</span>
-            <span class="footer-tag">Live Monday.com Data</span>
+            <span class="footer-tag">Live Monday.com GraphQL</span>
           </div>
         </div>
       </div>
