@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: skylark-bi-agent
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONDAY_API_TOKEN
+        sync: false          # set in Render dashboard
+      - key: MONDAY_API_URL
+        value: https://api.monday.com/v2
+      - key: DEALS_BOARD_ID
+        sync: false
+      - key: WORK_ORDERS_BOARD_ID
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false

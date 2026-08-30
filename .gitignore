@@ -1,5 +1,7 @@
 .env
+venv/
 __pycache__/
+*.zip
 *.pyc
 .venv/
 venv/
