@@ -172,17 +172,20 @@ class MondayClient:
         # Handle pagination if the board has more items than one page
         cursor = items_page.get("cursor")
         while cursor:
-            more = self._get_next_page(cursor)
-            items.extend(more.get("items", []))
+            more = self._get_next_page(cursor, limit=limit)
+            new_items = more.get("items", [])
+            if not new_items:
+                break
+            items.extend(new_items)
             cursor = more.get("cursor")
 
         return items
 
-    def _get_next_page(self, cursor: str) -> dict:
+    def _get_next_page(self, cursor: str, limit: int = 100) -> dict:
         """Follows pagination cursor for boards with many items."""
         query = """
-        query ($cursor: String!) {
-            next_items_page (cursor: $cursor) {
+        query ($cursor: String!, $limit: Int) {
+            next_items_page (cursor: $cursor, limit: $limit) {
                 cursor
                 items {
                     id
@@ -200,7 +203,7 @@ class MondayClient:
             }
         }
         """
-        result = self._execute(query, variables={"cursor": cursor})
+        result = self._execute(query, variables={"cursor": cursor, "limit": limit})
         return result.get("next_items_page", {})
 
     def get_deals(self) -> list:

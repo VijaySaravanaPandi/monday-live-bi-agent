@@ -15,6 +15,8 @@ class Config:
     MONDAY_API_URL = os.getenv("MONDAY_API_URL", "https://api.monday.com/v2")
     DEALS_BOARD_ID = os.getenv("DEALS_BOARD_ID")
     WORK_ORDERS_BOARD_ID = os.getenv("WORK_ORDERS_BOARD_ID")
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+    GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 
     @classmethod
     def validate(cls):
@@ -26,6 +28,8 @@ class Config:
             missing.append("DEALS_BOARD_ID")
         if not cls.WORK_ORDERS_BOARD_ID:
             missing.append("WORK_ORDERS_BOARD_ID")
+        if not cls.GROQ_API_KEY:
+            missing.append("GROQ_API_KEY")
 
         if missing:
             raise EnvironmentError(
@@ -34,4 +38,4 @@ class Config:
             )
 
 
-config = Config()
+config = Config()
