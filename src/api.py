@@ -97,6 +97,57 @@ def health():
     return {"status": "ok", "version": "1.0.0", "service": "skylark-bi-agent"}
 
 
+_metrics_cache = {"data": None, "timestamp": 0}
+
+@app.get("/metrics")
+def metrics():
+    """Returns live KPI metrics for the dashboard cards."""
+    import time
+    global _metrics_cache
+    now = time.time()
+    if _metrics_cache["data"] and (now - _metrics_cache["timestamp"] < 60):
+        return _metrics_cache["data"]
+
+    try:
+        orch = get_orchestrator()
+        client = orch.monday
+
+        # Fetch raw data from both boards
+        raw_deals = client.get_board_items(config.DEALS_BOARD_ID)
+        raw_work_orders = client.get_board_items(config.WORK_ORDERS_BOARD_ID)
+
+        # Normalize
+        from src.normalizer import normalize_deals_board, normalize_work_orders_board
+        deals, _ = normalize_deals_board(raw_deals)
+        work_orders, _ = normalize_work_orders_board(raw_work_orders)
+
+        # Compute metrics deterministically
+        import src.bi_engine as bi_mod
+        pipeline = bi_mod.total_pipeline_value(deals, {})
+        win = bi_mod.win_rate(deals, {})
+        rev = bi_mod.revenue_summary(work_orders, {})
+        stages = bi_mod.deal_count_by_stage(deals, {})
+
+        data = {
+            "pipeline_value": pipeline.get("value", 0),
+            "deal_count": pipeline.get("deal_count", 0),
+            "deals_with_values": pipeline.get("deals_with_valid_value", 0),
+            "win_rate_pct": win.get("win_rate_percent", 0),
+            "total_closed_won": win.get("won_count", 0),
+            "total_closed_lost": win.get("lost_count", 0),
+            "revenue_collected": rev.get("total_collected_incl_gst", 0),
+            "revenue_billed": rev.get("total_billed", 0),
+            "amount_receivable": rev.get("total_receivable", 0),
+            "work_order_count": len(work_orders),
+            "stage_breakdown": stages.get("breakdown", {}),
+        }
+        _metrics_cache = {"data": data, "timestamp": now}
+        return data
+    except Exception as e:
+        logger.warning("Metrics fetch failed: %s", e)
+        return {"error": str(e)}
+
+
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
     """
